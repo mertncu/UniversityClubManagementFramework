@@ -69,7 +69,7 @@ public class User implements UserDetails {
     }
 
     public void setRole(String role) {
-        this.role = role;
+        this.role = Role.valueOf(role.toUpperCase()).name();
     }
 
     public void setName(String name) {
