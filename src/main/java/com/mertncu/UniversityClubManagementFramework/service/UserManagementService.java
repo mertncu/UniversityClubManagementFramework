@@ -33,47 +33,50 @@ public class UserManagementService {
         RequestResponseDTO response = new RequestResponseDTO();
 
         try {
-            // E-posta adresinin benzersizliğini kontrol et
             if (userRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
                 response.setStatusCode(400);
                 response.setError("Email already exists");
                 return response;
             }
 
-            // Yeni kullanıcıyı oluştur
             User user = new User();
             user.setId(registrationRequest.getId());
             user.setName(registrationRequest.getName());
             user.setEmail(registrationRequest.getEmail());
-            user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));  // Şifreyi şifrele
-            user.setRole("ROLE_USER");  // Varsayılan rol
+            user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 
-            // Kullanıcıyı veritabanına kaydet
+            String role = registrationRequest.getRole();
+            if (role == null || role.isEmpty()) {
+                user.setRole("ROLE_USER");
+            } else {
+
+                if (role.equals("ADMIN")) {
+                    user.setRole("ROLE_ADMIN");
+                } else {
+                    user.setRole("ROLE_USER");
+                }
+            }
+
             userRepository.save(user);
 
-            // Kullanıcı kaydedildiyse, token'ları oluştur
             if (user.getId() != null) {
-                // Access token oluştur
                 String accessToken = jwtUtils.generateToken(user);
-                // Refresh token oluştur
                 String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
 
-                // Yanıtı oluştur
+
                 response.setStatusCode(200);
                 response.setMessage("User registered successfully");
-                response.setAccessToken(accessToken);  // Access token'ı ekle
-                response.setRefreshToken(refreshToken);  // Refresh token'ı ekle
+                response.setAccessToken(accessToken);
+                response.setRefreshToken(refreshToken);
             }
 
         } catch (Exception e) {
-            // Hata durumunda yanıtı ayarla
             response.setStatusCode(500);
             response.setError(e.getMessage());
         }
 
         return response;
     }
-
 
     public RequestResponseDTO getAllUsers() {
         RequestResponseDTO reqRes = new RequestResponseDTO();
@@ -169,21 +172,17 @@ public class UserManagementService {
     public RequestResponseDTO updateUser(Integer userId, User updatedUser) {
         RequestResponseDTO requestResponse = new RequestResponseDTO();
         try {
-            // Kullanıcıyı ID'ye göre bul
             User existingUser = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            // Güncellenmiş bilgileri mevcut kullanıcıya aktar
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setName(updatedUser.getName());
             existingUser.setRole(updatedUser.getRole());
 
-            // Şifreyi güncelle
             if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
                 existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             }
 
-            // Veritabanına kaydet
             User savedUser = userRepository.save(existingUser);
             requestResponse.setUser(savedUser);
             requestResponse.setStatusCode(200);
