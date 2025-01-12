@@ -24,10 +24,10 @@ public class UserController {
         return ResponseEntity.ok(usersManagementService.createUser(user));
     }
 
-    @PostMapping("/auth/login")
-    public ResponseEntity<RequestResponseDTO> login(@RequestBody RequestResponseDTO loginRequest) {
-        return ResponseEntity.ok(usersManagementService.login(loginRequest));
-    }
+        @PostMapping("/auth/login")
+        public ResponseEntity<RequestResponseDTO> login(@RequestBody RequestResponseDTO loginRequest) {
+            return ResponseEntity.ok(usersManagementService.login(loginRequest));
+        }
 
     @PostMapping("/auth/refreshToken")
     public ResponseEntity<RequestResponseDTO> refreshToken(@RequestBody RequestResponseDTO refreshTokenRequest) {

@@ -60,6 +60,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 System.out.println("Roles: " + userDetails.getAuthorities());
             } else {
                 System.out.println("Invalid token or expired token.");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token or expired token.");
+                return;
             }
         }
         filterChain.doFilter(request, response);

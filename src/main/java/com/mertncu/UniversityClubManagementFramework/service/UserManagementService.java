@@ -103,26 +103,37 @@ public class UserManagementService {
         RequestResponseDTO response = new RequestResponseDTO();
 
         try {
-            authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken
-                            (loginRequest
-                                    .getEmail(),
-                                    loginRequest.getPassword()));
+            // Kullanıcı doğrulama işlemi
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    loginRequest.getEmail(),
+                    loginRequest.getPassword()));
 
+            // Kullanıcıyı veritabanından bulma
             var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+
+            // Token oluşturma
             var jwtToken = jwtUtils.generateToken(user);
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+
+            // Yanıt bilgilerini ayarlama
             response.setStatusCode(200);
             response.setToken(jwtToken);
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Login successful");
+
+            // Kullanıcı rolünü ekleme
+            String role = user.getRole();  // Assuming 'getRole()' is a method in your User class
+            response.setRole(role);  // Add the role to the response DTO
+
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setError(e.getMessage());
         }
+
         return response;
     }
+
 
     public RequestResponseDTO refreshToken(RequestResponseDTO refreshTokenRequest){
         RequestResponseDTO response = new RequestResponseDTO();
