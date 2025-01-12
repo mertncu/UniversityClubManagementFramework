@@ -12,8 +12,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info()
                 .title("University Club Management Framework API")
-                .description("This is a Spring Boot RESTful service using " +
-                        "SpringFox Swagger documentation.")
+                .description("This is a Spring Boot RESTful service using SpringDoc OpenAPI documentation.")
                 .contact(new Contact()
                         .name("Mert Uncu"))
                 .version("1.0"));
