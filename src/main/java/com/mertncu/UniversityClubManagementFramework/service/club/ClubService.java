@@ -1,4 +1,4 @@
-package com.mertncu.UniversityClubManagementFramework.service;
+package com.mertncu.UniversityClubManagementFramework.service.club;
 
 import com.mertncu.UniversityClubManagementFramework.entity.Club;
 import com.mertncu.UniversityClubManagementFramework.repository.ClubRepository;

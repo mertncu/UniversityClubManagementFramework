@@ -1,7 +1,7 @@
 package com.mertncu.UniversityClubManagementFramework.controller;
 
 import com.mertncu.UniversityClubManagementFramework.dto.AuthReqResDTO;
-import com.mertncu.UniversityClubManagementFramework.service.UserManagementService;
+import com.mertncu.UniversityClubManagementFramework.service.user.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

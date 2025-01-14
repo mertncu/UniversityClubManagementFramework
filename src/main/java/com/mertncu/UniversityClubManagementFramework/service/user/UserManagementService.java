@@ -1,8 +1,9 @@
-package com.mertncu.UniversityClubManagementFramework.service;
+package com.mertncu.UniversityClubManagementFramework.service.user;
 
 import com.mertncu.UniversityClubManagementFramework.dto.AuthReqResDTO;
 import com.mertncu.UniversityClubManagementFramework.entity.User;
 import com.mertncu.UniversityClubManagementFramework.repository.UserRepository;
+import com.mertncu.UniversityClubManagementFramework.service.auth.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

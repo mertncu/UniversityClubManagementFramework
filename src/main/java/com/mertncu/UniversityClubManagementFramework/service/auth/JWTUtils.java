@@ -1,4 +1,4 @@
-package com.mertncu.UniversityClubManagementFramework.service;
+package com.mertncu.UniversityClubManagementFramework.service.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

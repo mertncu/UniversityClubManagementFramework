@@ -1,7 +1,7 @@
 package com.mertncu.UniversityClubManagementFramework.controller;
 
 import com.mertncu.UniversityClubManagementFramework.entity.Club;
-import com.mertncu.UniversityClubManagementFramework.service.ClubService;
+import com.mertncu.UniversityClubManagementFramework.service.club.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

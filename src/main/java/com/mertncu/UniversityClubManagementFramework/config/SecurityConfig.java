@@ -1,6 +1,6 @@
 package com.mertncu.UniversityClubManagementFramework.config;
 
-import com.mertncu.UniversityClubManagementFramework.service.UserDetailService;
+import com.mertncu.UniversityClubManagementFramework.service.user.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

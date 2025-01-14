@@ -1,8 +1,7 @@
 package com.mertncu.UniversityClubManagementFramework.config;
 
-import com.mertncu.UniversityClubManagementFramework.entity.User;
-import com.mertncu.UniversityClubManagementFramework.service.JWTUtils;
-import com.mertncu.UniversityClubManagementFramework.service.UserDetailService;
+import com.mertncu.UniversityClubManagementFramework.service.auth.JWTUtils;
+import com.mertncu.UniversityClubManagementFramework.service.user.UserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

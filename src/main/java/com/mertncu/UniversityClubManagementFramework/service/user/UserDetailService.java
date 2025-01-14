@@ -1,4 +1,4 @@
-package com.mertncu.UniversityClubManagementFramework.service;
+package com.mertncu.UniversityClubManagementFramework.service.user;
 
 import com.mertncu.UniversityClubManagementFramework.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
