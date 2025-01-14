@@ -22,6 +22,14 @@ public class User implements UserDetails {
     private String email;
     private String role;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "primary_club_id", referencedColumnName = "club_id", foreignKey = @ForeignKey(name = "fk_primary_club"))
+    private Club primaryClub;  // Relation to the Club entity
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "primary_role_id", referencedColumnName = "role_id", foreignKey = @ForeignKey(name = "fk_primary_role"))
+    private ClubRole primaryRole;
+
     @Version
     private Integer version;
 
@@ -94,5 +102,21 @@ public class User implements UserDetails {
 
     public String getRole() {
         return role;
+    }
+
+    public Club getPrimaryClub() {
+        return primaryClub;
+    }
+
+    public void setPrimaryClub(Club primaryClub) {
+        this.primaryClub = primaryClub;
+    }
+
+    public ClubRole getPrimaryRole() {
+        return primaryRole;
+    }
+
+    public void setPrimaryRole(ClubRole primaryRole) {
+        this.primaryRole = primaryRole;
     }
 }

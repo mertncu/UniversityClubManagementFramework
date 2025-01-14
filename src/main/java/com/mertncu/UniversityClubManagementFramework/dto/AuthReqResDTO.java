@@ -26,6 +26,8 @@ public class AuthReqResDTO {
     private String city;
     private String role;
     private String password;
+    private Long primaryClubId;
+    private Integer primaryRoleId;
     private User user;
     private List<User> users;
 
@@ -147,5 +149,21 @@ public class AuthReqResDTO {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public Long getPrimaryClubId() {
+        return primaryClubId;
+    }
+
+    public void setPrimaryClubId(Long primaryClubId) {
+        this.primaryClubId = primaryClubId;
+    }
+
+    public Integer getPrimaryRoleId() {
+        return primaryRoleId;
+    }
+
+    public void setPrimaryRoleId(Integer primaryRoleId) {
+        this.primaryRoleId = primaryRoleId;
     }
 }
