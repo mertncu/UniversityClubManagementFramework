@@ -1,11 +1,7 @@
 package com.mertncu.UniversityClubManagementFramework.service.user;
 
 import com.mertncu.UniversityClubManagementFramework.dto.AuthReqResDTO;
-import com.mertncu.UniversityClubManagementFramework.entity.Club;
-import com.mertncu.UniversityClubManagementFramework.entity.ClubRole;
 import com.mertncu.UniversityClubManagementFramework.entity.User;
-import com.mertncu.UniversityClubManagementFramework.repository.ClubRepository;
-import com.mertncu.UniversityClubManagementFramework.repository.ClubRoleRepository;
 import com.mertncu.UniversityClubManagementFramework.repository.UserRepository;
 import com.mertncu.UniversityClubManagementFramework.service.auth.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +21,6 @@ public class UserManagementService {
     private UserRepository userRepository;
 
     @Autowired
-    private ClubRepository clubRepository;
-
-    @Autowired
-    private ClubRoleRepository clubRoleRepository;
-
-    @Autowired
     private JWTUtils jwtUtils;
 
     @Autowired
@@ -40,12 +30,10 @@ public class UserManagementService {
     private PasswordEncoder passwordEncoder;
 
 
-    @Transactional
     public AuthReqResDTO register(AuthReqResDTO registrationRequest) {
         AuthReqResDTO response = new AuthReqResDTO();
 
         try {
-            // Check if user already exists
             if (userRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
                 response.setStatusCode(400);
                 response.setError("Email already exists");
@@ -58,30 +46,30 @@ public class UserManagementService {
             user.setEmail(registrationRequest.getEmail());
             user.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 
-            // Handle primary club and role
-            if (registrationRequest.getPrimaryClubId() != null) {
-                Club primaryClub = clubRepository.findById(registrationRequest.getPrimaryClubId())
-                        .orElseThrow(() -> new RuntimeException("Club not found"));
-                user.setPrimaryClub(primaryClub);
+            String role = registrationRequest.getRole();
+            if (role == null || role.isEmpty()) {
+                user.setRole("ROLE_USER");
+            } else {
+
+                if (role.equals("ADMIN")) {
+                    user.setRole("ROLE_ADMIN");
+                } else {
+                    user.setRole("ROLE_USER");
+                }
             }
 
-            if (registrationRequest.getPrimaryRoleId() != null) {
-                ClubRole primaryRole = clubRoleRepository.findById(registrationRequest.getPrimaryRoleId())
-                        .orElseThrow(() -> new RuntimeException("Role not found"));
-                user.setPrimaryRole(primaryRole);
-            }
-
-            // Save the user
             userRepository.save(user);
 
-            // Generate JWT tokens
-            String accessToken = jwtUtils.generateToken(user);
-            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+            if (user.getId() != null) {
+                String accessToken = jwtUtils.generateToken(user);
+                String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
 
-            response.setStatusCode(200);
-            response.setMessage("User registered successfully");
-            response.setAccessToken(accessToken);
-            response.setRefreshToken(refreshToken);
+
+                response.setStatusCode(200);
+                response.setMessage("User registered successfully");
+                response.setAccessToken(accessToken);
+                response.setRefreshToken(refreshToken);
+            }
 
         } catch (Exception e) {
             response.setStatusCode(500);
@@ -90,7 +78,6 @@ public class UserManagementService {
 
         return response;
     }
-
 
     public AuthReqResDTO getAllUsers() {
         AuthReqResDTO reqRes = new AuthReqResDTO();
@@ -188,7 +175,7 @@ public class UserManagementService {
     }
 
     @Transactional
-    public AuthReqResDTO updateUser(Integer userId, User updatedUser) {
+    public AuthReqResDTO updateUser(String userId, User updatedUser) {
         AuthReqResDTO requestResponse = new AuthReqResDTO();
         try {
             User existingUser = userRepository.findById(userId)
@@ -216,7 +203,7 @@ public class UserManagementService {
         return requestResponse;
     }
 
-    public AuthReqResDTO deleteUser(Integer userId) {
+    public AuthReqResDTO deleteUser(String userId) {
         AuthReqResDTO requestResponse = new AuthReqResDTO();
         try {
             Optional<User> userOptional = userRepository.findById(userId);
@@ -235,7 +222,7 @@ public class UserManagementService {
         return requestResponse;
     }
 
-    public AuthReqResDTO getUserById(Integer userId) {
+    public AuthReqResDTO getUserById(String userId) {
         AuthReqResDTO requestRespone = new AuthReqResDTO();
         try {
             Optional<User> userOptional = userRepository.findById(userId);

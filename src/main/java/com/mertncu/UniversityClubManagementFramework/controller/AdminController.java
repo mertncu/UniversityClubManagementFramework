@@ -24,17 +24,17 @@ public class AdminController {
     }
 
     @GetMapping("/get-users/{userId}")
-    public ResponseEntity<AuthReqResDTO> getUserById(@PathVariable Integer userId){
+    public ResponseEntity<AuthReqResDTO> getUserById(@PathVariable String userId){
         return ResponseEntity.ok(usersManagementService.getUserById(userId));
     }
 
     @PutMapping("/update/{userId}")
-    public ResponseEntity<AuthReqResDTO> updateUser(@PathVariable Integer userId, @RequestBody User updateUserRequest){
+    public ResponseEntity<AuthReqResDTO> updateUser(@PathVariable String userId, @RequestBody User updateUserRequest){
         return ResponseEntity.ok(usersManagementService.updateUser(userId, updateUserRequest));
     }
 
     @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<AuthReqResDTO> deleteUser(@PathVariable Integer userId){
+    public ResponseEntity<AuthReqResDTO> deleteUser(@PathVariable String userId){
         return ResponseEntity.ok(usersManagementService.deleteUser(userId));
     }
 }
