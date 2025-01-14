@@ -1,6 +1,6 @@
 package com.mertncu.UniversityClubManagementFramework.service;
 
-import com.mertncu.UniversityClubManagementFramework.dto.RequestResponseDTO;
+import com.mertncu.UniversityClubManagementFramework.dto.AuthReqResDTO;
 import com.mertncu.UniversityClubManagementFramework.entity.User;
 import com.mertncu.UniversityClubManagementFramework.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +29,8 @@ public class UserManagementService {
     private PasswordEncoder passwordEncoder;
 
 
-    public RequestResponseDTO register(RequestResponseDTO registrationRequest) {
-        RequestResponseDTO response = new RequestResponseDTO();
+    public AuthReqResDTO register(AuthReqResDTO registrationRequest) {
+        AuthReqResDTO response = new AuthReqResDTO();
 
         try {
             if (userRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
@@ -78,8 +78,8 @@ public class UserManagementService {
         return response;
     }
 
-    public RequestResponseDTO getAllUsers() {
-        RequestResponseDTO reqRes = new RequestResponseDTO();
+    public AuthReqResDTO getAllUsers() {
+        AuthReqResDTO reqRes = new AuthReqResDTO();
 
         try {
             List<User> result = userRepository.findAll();
@@ -99,33 +99,27 @@ public class UserManagementService {
         }
     }
 
-    public RequestResponseDTO login(RequestResponseDTO loginRequest) {
-        RequestResponseDTO response = new RequestResponseDTO();
+    public AuthReqResDTO login(AuthReqResDTO loginRequest) {
+        AuthReqResDTO response = new AuthReqResDTO();
 
         try {
-            // Kullanıcı doğrulama işlemi
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     loginRequest.getEmail(),
                     loginRequest.getPassword()));
 
-            // Kullanıcıyı veritabanından bulma
             var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
 
-            // Token oluşturma
             var jwtToken = jwtUtils.generateToken(user);
             var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
 
-            // Yanıt bilgilerini ayarlama
             response.setStatusCode(200);
             response.setToken(jwtToken);
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Login successful");
 
-            // Kullanıcı rolünü ekleme
-            String role = user.getRole();  // Assuming 'getRole()' is a method in your User class
-            response.setRole(role);  // Add the role to the response DTO
-
+            String role = user.getRole();
+            response.setRole(role);
         } catch (Exception e) {
             response.setStatusCode(500);
             response.setError(e.getMessage());
@@ -135,8 +129,8 @@ public class UserManagementService {
     }
 
 
-    public RequestResponseDTO refreshToken(RequestResponseDTO refreshTokenRequest){
-        RequestResponseDTO response = new RequestResponseDTO();
+    public AuthReqResDTO refreshToken(AuthReqResDTO refreshTokenRequest){
+        AuthReqResDTO response = new AuthReqResDTO();
         try{
             String ourEmail = jwtUtils.extractUsername(refreshTokenRequest.getToken());
             User users = userRepository.findByEmail(ourEmail).orElseThrow();
@@ -158,8 +152,8 @@ public class UserManagementService {
         }
     }
 
-    public RequestResponseDTO getMyInfo(String email){
-        RequestResponseDTO reqRes = new RequestResponseDTO();
+    public AuthReqResDTO getMyInfo(String email){
+        AuthReqResDTO reqRes = new AuthReqResDTO();
         try {
             Optional<User> userOptional = userRepository.findByEmail(email);
             if (userOptional.isPresent()) {
@@ -180,8 +174,8 @@ public class UserManagementService {
     }
 
     @Transactional
-    public RequestResponseDTO updateUser(Integer userId, User updatedUser) {
-        RequestResponseDTO requestResponse = new RequestResponseDTO();
+    public AuthReqResDTO updateUser(Integer userId, User updatedUser) {
+        AuthReqResDTO requestResponse = new AuthReqResDTO();
         try {
             User existingUser = userRepository.findById(userId)
                     .orElseThrow(() -> new RuntimeException("User not found"));
@@ -208,8 +202,8 @@ public class UserManagementService {
         return requestResponse;
     }
 
-    public RequestResponseDTO deleteUser(Integer userId) {
-        RequestResponseDTO requestResponse = new RequestResponseDTO();
+    public AuthReqResDTO deleteUser(Integer userId) {
+        AuthReqResDTO requestResponse = new AuthReqResDTO();
         try {
             Optional<User> userOptional = userRepository.findById(userId);
             if (userOptional.isPresent()) {
@@ -227,8 +221,8 @@ public class UserManagementService {
         return requestResponse;
     }
 
-    public RequestResponseDTO getUserById(Integer userId) {
-        RequestResponseDTO requestRespone = new RequestResponseDTO();
+    public AuthReqResDTO getUserById(Integer userId) {
+        AuthReqResDTO requestRespone = new AuthReqResDTO();
         try {
             Optional<User> userOptional = userRepository.findById(userId);
             if (userOptional.isPresent()) {
@@ -246,8 +240,8 @@ public class UserManagementService {
         return requestRespone;
     }
 
-    public RequestResponseDTO createUser(User user) {
-        RequestResponseDTO requestRespone = new RequestResponseDTO();
+    public AuthReqResDTO createUser(User user) {
+        AuthReqResDTO requestRespone = new AuthReqResDTO();
         try {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User savedUser = userRepository.save(user);

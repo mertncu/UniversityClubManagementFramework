@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestResponseDTO {
+public class AuthReqResDTO {
 
     private int statusCode;
     private String error;
