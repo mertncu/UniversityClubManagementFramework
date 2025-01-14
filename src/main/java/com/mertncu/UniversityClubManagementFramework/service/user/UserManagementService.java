@@ -1,10 +1,15 @@
 package com.mertncu.UniversityClubManagementFramework.service.user;
 
 import com.mertncu.UniversityClubManagementFramework.dto.AuthReqResDTO;
+import com.mertncu.UniversityClubManagementFramework.entity.Club;
 import com.mertncu.UniversityClubManagementFramework.entity.User;
+import com.mertncu.UniversityClubManagementFramework.entity.UserClubMembership;
+import com.mertncu.UniversityClubManagementFramework.repository.UserClubMembershipRepository;
 import com.mertncu.UniversityClubManagementFramework.repository.UserRepository;
 import com.mertncu.UniversityClubManagementFramework.service.auth.JWTUtils;
+import com.mertncu.UniversityClubManagementFramework.service.club.ClubService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserManagementService {
@@ -22,6 +28,12 @@ public class UserManagementService {
 
     @Autowired
     private JWTUtils jwtUtils;
+
+    @Autowired
+    private ClubService clubService;
+
+    @Autowired
+    private UserClubMembershipRepository userClubMembershipRepository;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -100,32 +112,37 @@ public class UserManagementService {
         }
     }
 
+    @Transactional
     public AuthReqResDTO login(AuthReqResDTO loginRequest) {
         AuthReqResDTO response = new AuthReqResDTO();
-
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    loginRequest.getEmail(),
-                    loginRequest.getPassword()));
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
+            User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+            String token = jwtUtils.generateToken(user);
+            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
 
-            var user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+            List<UserClubMembership> memberships = userClubMembershipRepository.findByUserId(user.getId());
+            List<Club> clubs = memberships.stream()
+                    .map(membership -> clubService.getClubById(membership.getClubId()))
+                    .collect(Collectors.toList());
 
-            var jwtToken = jwtUtils.generateToken(user);
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
-
-            response.setStatusCode(200);
-            response.setToken(jwtToken);
+            response.setStatusCode(HttpStatus.OK.value());
+            response.setToken(token);
             response.setRefreshToken(refreshToken);
-            response.setExpirationTime("24Hrs");
-            response.setMessage("Login successful");
+            response.setMessage("Login successful.");
+            response.setId(user.getId());
+            response.setName(user.getName());
+            response.setEmail(user.getEmail());
+            response.setRole(user.getRole());
+            response.setClubs(clubs); // Assuming you add a setClubs() method to AuthReqResDTO
 
-            String role = user.getRole();
-            response.setRole(role);
         } catch (Exception e) {
-            response.setStatusCode(500);
-            response.setError(e.getMessage());
+            response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+            response.setError("Authentication failed");
+            response.setMessage("Invalid credentials or user not found.");
         }
-
         return response;
     }
 

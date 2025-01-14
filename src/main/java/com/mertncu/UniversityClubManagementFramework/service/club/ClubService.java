@@ -41,4 +41,10 @@ public class ClubService {
     public Club getClubByName(String name) {
         return clubRepository.findByName(name);
     }
+
+    public Club getClubById(Integer clubId) {
+        Optional<Club> optionalClub = clubRepository.findById(clubId.longValue());
+        return optionalClub.orElse(null);
+    }
+
 }

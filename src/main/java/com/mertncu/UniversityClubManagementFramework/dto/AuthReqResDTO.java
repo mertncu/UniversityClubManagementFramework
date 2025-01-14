@@ -3,6 +3,7 @@ package com.mertncu.UniversityClubManagementFramework.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.mertncu.UniversityClubManagementFramework.entity.Club;
 import com.mertncu.UniversityClubManagementFramework.entity.User;
 import lombok.Data;
 
@@ -28,6 +29,7 @@ public class AuthReqResDTO {
     private String password;
     private User user;
     private List<User> users;
+    private List<Club> clubs;
 
     public int getStatusCode() {
         return statusCode;
@@ -147,5 +149,13 @@ public class AuthReqResDTO {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public List<Club> getClubs() {
+        return clubs;
+    }
+
+    public void setClubs(List<Club> clubs) {
+        this.clubs = clubs;
     }
 }
