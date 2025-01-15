@@ -1,12 +1,12 @@
 package com.mertncu.UniversityClubManagementFramework.service.user;
 
-import com.mertncu.UniversityClubManagementFramework.dto.AuthReqResDTO;
-import com.mertncu.UniversityClubManagementFramework.entity.Club;
-import com.mertncu.UniversityClubManagementFramework.entity.User;
-import com.mertncu.UniversityClubManagementFramework.entity.UserClubMembership;
-import com.mertncu.UniversityClubManagementFramework.repository.UserClubMembershipRepository;
-import com.mertncu.UniversityClubManagementFramework.repository.UserRepository;
-import com.mertncu.UniversityClubManagementFramework.service.EmailService;
+import com.mertncu.UniversityClubManagementFramework.dto.auth.AuthReqResDTO;
+import com.mertncu.UniversityClubManagementFramework.entity.club.Club;
+import com.mertncu.UniversityClubManagementFramework.entity.user.User;
+import com.mertncu.UniversityClubManagementFramework.entity.club.UserClubMembership;
+import com.mertncu.UniversityClubManagementFramework.repository.club.UserClubMembershipRepository;
+import com.mertncu.UniversityClubManagementFramework.repository.user.UserRepository;
+import com.mertncu.UniversityClubManagementFramework.service.email.EmailService;
 import com.mertncu.UniversityClubManagementFramework.service.auth.JWTUtils;
 import com.mertncu.UniversityClubManagementFramework.service.club.ClubService;
 import org.apache.commons.lang3.RandomStringUtils;

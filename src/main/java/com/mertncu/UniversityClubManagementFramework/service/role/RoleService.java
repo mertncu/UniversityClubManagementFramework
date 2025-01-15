@@ -1,7 +1,7 @@
 package com.mertncu.UniversityClubManagementFramework.service.role;
 
-import com.mertncu.UniversityClubManagementFramework.entity.ClubRole;
-import com.mertncu.UniversityClubManagementFramework.repository.RoleRepository;
+import com.mertncu.UniversityClubManagementFramework.entity.club.ClubRole;
+import com.mertncu.UniversityClubManagementFramework.repository.user.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

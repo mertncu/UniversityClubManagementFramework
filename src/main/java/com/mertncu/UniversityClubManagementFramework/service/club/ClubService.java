@@ -1,8 +1,8 @@
 package com.mertncu.UniversityClubManagementFramework.service.club;
 
-import com.mertncu.UniversityClubManagementFramework.entity.Club;
+import com.mertncu.UniversityClubManagementFramework.entity.club.Club;
 import com.mertncu.UniversityClubManagementFramework.exception.ResourceNotFoundException;
-import com.mertncu.UniversityClubManagementFramework.repository.ClubRepository;
+import com.mertncu.UniversityClubManagementFramework.repository.club.ClubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
