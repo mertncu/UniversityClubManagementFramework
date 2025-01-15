@@ -4,6 +4,7 @@ package com.mertncu.UniversityClubManagementFramework.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mertncu.UniversityClubManagementFramework.entity.Club;
+import com.mertncu.UniversityClubManagementFramework.entity.Event;
 import com.mertncu.UniversityClubManagementFramework.entity.User;
 import lombok.Data;
 
@@ -30,6 +31,9 @@ public class AuthReqResDTO {
     private User user;
     private List<User> users;
     private List<Club> clubs;
+    private Event event;
+    private List<Event> events;
+    private EventDTO eventDTO;
 
     public int getStatusCode() {
         return statusCode;
@@ -151,11 +155,38 @@ public class AuthReqResDTO {
         this.accessToken = accessToken;
     }
 
+    // Getter and setter for 'event'
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
+    }
+
+    // Getter and setter for 'events'
+    public List<Event> getEvents() {
+        return events;
+    }
+
+    public void setEvents(List<Event> events) {
+        this.events = events;
+    }
+
+    // Getter and setter for 'clubs'
     public List<Club> getClubs() {
         return clubs;
     }
 
     public void setClubs(List<Club> clubs) {
         this.clubs = clubs;
+    }
+
+    public EventDTO getEventDTO() {
+        return eventDTO;
+    }
+
+    public void setEventDTO(EventDTO eventDTO) {
+        this.eventDTO = eventDTO;
     }
 }

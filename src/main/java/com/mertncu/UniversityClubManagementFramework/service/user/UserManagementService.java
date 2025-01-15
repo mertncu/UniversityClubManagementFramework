@@ -136,7 +136,7 @@ public class UserManagementService {
             response.setName(user.getName());
             response.setEmail(user.getEmail());
             response.setRole(user.getRole());
-            response.setClubs(clubs); // Assuming you add a setClubs() method to AuthReqResDTO
+            response.setClubs(clubs);
 
         } catch (Exception e) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
