@@ -6,8 +6,10 @@ import com.mertncu.UniversityClubManagementFramework.entity.User;
 import com.mertncu.UniversityClubManagementFramework.entity.UserClubMembership;
 import com.mertncu.UniversityClubManagementFramework.repository.UserClubMembershipRepository;
 import com.mertncu.UniversityClubManagementFramework.repository.UserRepository;
+import com.mertncu.UniversityClubManagementFramework.service.EmailService;
 import com.mertncu.UniversityClubManagementFramework.service.auth.JWTUtils;
 import com.mertncu.UniversityClubManagementFramework.service.club.ClubService;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -258,19 +260,41 @@ public class UserManagementService {
         return requestRespone;
     }
 
+    @Autowired
+    private EmailService emailService; // Inject the EmailService
+
     public AuthReqResDTO createUser(User user) {
         AuthReqResDTO requestRespone = new AuthReqResDTO();
         try {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            // Generate a random password
+            String generatedPassword = generateRandomPassword(); // Implement this method
+
+            // Encode the password before saving
+            user.setPassword(passwordEncoder.encode(generatedPassword));
+
+            // Save the user to the database
             User savedUser = userRepository.save(user);
+
+            // Send email with credentials
+            String emailSubject = "Your Account Credentials";
+            String emailText = "Your account has been created.\n\n" +
+                    "Email: " + user.getEmail() + "\n" +
+                    "Password: " + generatedPassword + "\n\n" +
+                    "Please change your password after logging in.";
+            emailService.sendCredentialsEmail(user.getEmail(), emailSubject, emailText);
+
             requestRespone.setUser(savedUser);
             requestRespone.setStatusCode(200);
-            requestRespone.setMessage("User created successfully");
+            requestRespone.setMessage("User created successfully and email sent with credentials.");
         } catch (Exception e) {
             requestRespone.setStatusCode(500);
             requestRespone.setMessage("Error occurred while creating user: " + e.getMessage());
         }
         return requestRespone;
+    }
+
+    private String generateRandomPassword() {
+        return RandomStringUtils.randomAlphanumeric(10);
     }
 }
 

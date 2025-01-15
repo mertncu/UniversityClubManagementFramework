@@ -15,7 +15,8 @@ public class AdminController {
 
     @PostMapping("/create-user")
     public ResponseEntity<AuthReqResDTO> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(usersManagementService.createUser(user));
+        AuthReqResDTO response = usersManagementService.createUser(user);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping("/get-all-users")
