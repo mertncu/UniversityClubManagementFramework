@@ -40,6 +40,8 @@ public class AuthReqResDTO {
     private List<MeetingDTO> meetingDTOs;
     private TaskDTO taskDTO;
     private List<TaskDTO> taskDTOs;
+    private FileDTO fileDTO;
+    private List<FileDTO> fileDTOs;
 
     public int getStatusCode() {
         return statusCode;
@@ -242,5 +244,21 @@ public class AuthReqResDTO {
 
     public List<TaskDTO> getTaskDTOs() {
         return taskDTOs;
+    }
+
+    public FileDTO getFileDTO() {
+        return fileDTO;
+    }
+
+    public void setFileDTO(FileDTO fileDTO) {
+        this.fileDTO = fileDTO;
+    }
+
+    public List<FileDTO> getFileDTOs() {
+        return fileDTOs;
+    }
+
+    public void setFileDTOs(List<FileDTO> fileDTOs) {
+        this.fileDTOs = fileDTOs;
     }
 }
