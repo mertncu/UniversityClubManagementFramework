@@ -36,6 +36,10 @@ public class AuthReqResDTO {
     private EventDTO eventDTO;
     private EventParticipantDTO eventParticipantDTO;
     private List<EventParticipantDTO> eventParticipantsDTOs;
+    private MeetingDTO meetingDTO;
+    private List<MeetingDTO> meetingDTOs;
+    private TaskDTO taskDTO;
+    private List<TaskDTO> taskDTOs;
 
     public int getStatusCode() {
         return statusCode;
@@ -206,5 +210,37 @@ public class AuthReqResDTO {
 
     public void setEventParticipantDTOs(List<EventParticipantDTO> eventParticipantsDTOs) {
         this.eventParticipantsDTOs = eventParticipantsDTOs;
+    }
+
+    public void setMeetingDTO(MeetingDTO meetingDTO) {
+        this.meetingDTO = meetingDTO;
+    }
+    public void setMeetingDTOs(List<MeetingDTO> meetingDTOs) {
+        this.meetingDTOs = meetingDTOs;
+    }
+
+    public MeetingDTO getMeetingDTO() {
+        return meetingDTO;
+    }
+
+    // Getters and Setters for meetingDTOs
+    public List<MeetingDTO> getMeetingDTOs() {
+        return meetingDTOs;
+    }
+
+    public void setTaskDTO(TaskDTO taskDTO) {
+        this.taskDTO = taskDTO;
+    }
+
+    public void setTaskDTOs(List<TaskDTO> taskDTOs) {
+        this.taskDTOs = taskDTOs;
+    }
+
+    public TaskDTO getTaskDTO() {
+        return taskDTO;
+    }
+
+    public List<TaskDTO> getTaskDTOs() {
+        return taskDTOs;
     }
 }
