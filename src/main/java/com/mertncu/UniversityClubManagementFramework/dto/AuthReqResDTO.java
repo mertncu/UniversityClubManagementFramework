@@ -34,6 +34,8 @@ public class AuthReqResDTO {
     private Event event;
     private List<Event> events;
     private EventDTO eventDTO;
+    private EventParticipantDTO eventParticipantDTO;
+    private List<EventParticipantDTO> eventParticipantsDTOs;
 
     public int getStatusCode() {
         return statusCode;
@@ -188,5 +190,21 @@ public class AuthReqResDTO {
 
     public void setEventDTO(EventDTO eventDTO) {
         this.eventDTO = eventDTO;
+    }
+
+    public EventParticipantDTO getEventParticipantDTO() {
+        return eventParticipantDTO;
+    }
+
+    public void setEventParticipantDTO(EventParticipantDTO eventParticipantDTO) {
+        this.eventParticipantDTO = eventParticipantDTO;
+    }
+
+    public List<EventParticipantDTO> getEventParticipantsDTOs() {
+        return eventParticipantsDTOs;
+    }
+
+    public void setEventParticipantDTOs(List<EventParticipantDTO> eventParticipantsDTOs) {
+        this.eventParticipantsDTOs = eventParticipantsDTOs;
     }
 }

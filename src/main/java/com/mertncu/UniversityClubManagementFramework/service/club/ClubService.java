@@ -1,6 +1,7 @@
 package com.mertncu.UniversityClubManagementFramework.service.club;
 
 import com.mertncu.UniversityClubManagementFramework.entity.Club;
+import com.mertncu.UniversityClubManagementFramework.exception.ResourceNotFoundException;
 import com.mertncu.UniversityClubManagementFramework.repository.ClubRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,9 +43,9 @@ public class ClubService {
         return clubRepository.findByName(name);
     }
 
-    public Club getClubById(Integer clubId) {
-        Optional<Club> optionalClub = clubRepository.findById(clubId.longValue());
-        return optionalClub.orElse(null);
+    public Club getClubById(int clubId) {
+        return clubRepository.findById((long) clubId)
+                .orElseThrow(() -> new ResourceNotFoundException("Club", "id", clubId));
     }
 
 }
