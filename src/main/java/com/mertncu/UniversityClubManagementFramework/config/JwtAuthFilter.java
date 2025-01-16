@@ -12,9 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
@@ -27,25 +26,41 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailService userDetailsService;
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         final String authHeader = request.getHeader("Authorization");
-        final String jwtToken;
-        final String userEmail;
 
-        if (authHeader == null || authHeader.isBlank()) {
+        // If the header is null or doesn't start with "Bearer ", skip the filter
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            System.out.println("Authorization header is missing or does not start with Bearer");
             filterChain.doFilter(request, response);
             return;
         }
 
-        jwtToken = authHeader.substring(7);
-        userEmail = jwtUtils.extractUsername(jwtToken);
+        final String jwtToken = authHeader.substring(7); // Extract token
+        String userEmail = null;
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        // Try to extract the username, and handle any exceptions during token parsing
+        try {
+            userEmail = jwtUtils.extractUsername(jwtToken);
+        } catch (Exception e) {
+            System.out.println("Error extracting username from token: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("Invalid JWT format");
+            return; // Stop processing
+        }
+
+        // If userEmail is null at this point, the token was invalid
+        if (userEmail == null) {
+            System.out.println("Invalid JWT token: username could not be extracted.");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT token");
+            return; // Stop processing
+        }
+
+        // Proceed with authentication
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
-
             if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
@@ -54,15 +69,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 securityContext.setAuthentication(token);
                 SecurityContextHolder.setContext(securityContext);
-
-                System.out.println("User authenticated: " + userDetails.getUsername());
-                System.out.println("Roles: " + userDetails.getAuthorities());
             } else {
                 System.out.println("Invalid token or expired token.");
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token or expired token.");
-                return;
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Invalid or expired token");
+                return; // Stop processing
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }

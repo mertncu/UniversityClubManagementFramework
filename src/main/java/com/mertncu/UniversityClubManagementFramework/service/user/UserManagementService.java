@@ -131,7 +131,7 @@ public class UserManagementService {
                     .collect(Collectors.toList());
 
             response.setStatusCode(HttpStatus.OK.value());
-            response.setToken(token);
+            response.setToken(token); // This sets the token field which is used for other purposes but not for sending to frontend
             response.setRefreshToken(refreshToken);
             response.setMessage("Login successful.");
             response.setId(user.getId());
@@ -139,6 +139,9 @@ public class UserManagementService {
             response.setEmail(user.getEmail());
             response.setRole(user.getRole());
             response.setClubs(clubs);
+
+            // **Important Correction:**
+            response.setAccessToken(token); // Set the accessToken field here
 
         } catch (Exception e) {
             response.setStatusCode(HttpStatus.UNAUTHORIZED.value());
